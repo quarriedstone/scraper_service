@@ -3,6 +3,7 @@ import subprocess
 from flask import Flask
 from flask import request
 
+name_id = 0
 app = Flask(__name__)
 
 
@@ -20,11 +21,13 @@ def airbnb():
         """
     city = request.args.get("city")
     if city:
-        subprocess.check_output(['scrapy', 'crawl', "bnb", "-a", f"query=\"{city}\"", "-o", "output.json"],
+        global name_id
+        name_id = name_id + 1
+        subprocess.check_output(['scrapy', 'crawl', "bnb", "-a", f"query=\"{city}\"", "-o", f"{name_id}.json"],
                                 cwd="airbnb-scraper/")
     else:
         return "City is not specified", 201
-    with open("airbnb-scraper/output.json") as items_file:
+    with open(f"airbnb-scraper/{name_id}.json") as items_file:
         return items_file.read()
 
 
@@ -37,12 +40,14 @@ def amazon():
         """
     category = request.args.get("category")
     if category:
+        global name_id
+        name_id = name_id + 1
         subprocess.check_output(['scrapy', 'crawl', "amazon_scraper", "-a", f"category=\"{category}\"",
-                                 "-o", "output.json"],
+                                 "-o", f"{name_id}.json"],
                                 cwd="amazon-scraper-master/")
     else:
         return "Category is not specified", 201
-    with open("amazon-scraper-master/output.json") as items_file:
+    with open(f"amazon-scraper-master/{name_id}.json") as items_file:
         return items_file.read()
 
 
