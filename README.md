@@ -5,7 +5,7 @@ Scraper service
 ## DEPLOYMENT
 ```docker build -t scraper_service .```
 
-```docker run -d --name scraper_service scraper_service```
+```docker run -d --name scraper_service -p6379:6379 scraper_service```
 
 Service is working on **6379** port
 
