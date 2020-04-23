@@ -11,5 +11,7 @@ Service is working on **6379** port
 
 ## HTTP ENDPOINTS
 **/get_amazon?category=<category_name>**
+You may also specify the list of categories:
+**/get_amazon?category=[laptops, iphone]**
 
 **/get_airbnb?city=<city_name>**
