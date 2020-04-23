@@ -12,4 +12,4 @@ Service is working on **6379** port
 ## HTTP ENDPOINTS
 **/get_amazon?category=<category_name>**
 
-**/get_amazon?city=<city_name>**
+**/get_airbnb?city=<city_name>**
