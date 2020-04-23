@@ -35,10 +35,11 @@ def amazon():
 
         wait for  this command to finish, and read output.json to client.
         """
-    category = request.args.get("city")
+    category = request.args.get("category")
     if category:
-        subprocess.check_output(['scrapy', 'crawl', "bnb", "-a", f"category=\"{category}\"", "-o", "output.json"],
-                                cwd="airbnb-scraper/")
+        subprocess.check_output(['scrapy', 'crawl', "amazon_scraper", "-a", f"category=\"{category}\"",
+                                 "-o", "output.json"],
+                                cwd="amazon-scraper-master/")
     else:
         return "Category is not specified", 201
     with open("amazon-scraper-master/data/output.json") as items_file:
