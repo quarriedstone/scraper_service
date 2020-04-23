@@ -42,7 +42,7 @@ def amazon():
                                 cwd="amazon-scraper-master/")
     else:
         return "Category is not specified", 201
-    with open("amazon-scraper-master/data/output.json") as items_file:
+    with open("amazon-scraper-master/output.json") as items_file:
         return items_file.read()
 
 
