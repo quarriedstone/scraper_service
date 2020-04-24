@@ -2,6 +2,7 @@ import subprocess
 
 from flask import Flask
 from flask import request
+from flask_api import status
 
 name_id = 0
 app = Flask(__name__)
@@ -27,9 +28,9 @@ def airbnb():
             subprocess.check_output(['scrapy', 'crawl', "bnb", "-a", f"query=\"{city}\"", "-o", f"{name_id}.json"],
                                     cwd="airbnb-scraper/")
         except Exception:
-            return "", 500
+            return status.HTTP_500_INTERNAL_SERVER_ERROR
     else:
-        return "City is not specified", 201
+        return "City is not specified", status.HTTP_204_NO_CONTENT
     with open(f"airbnb-scraper/{name_id}.json") as items_file:
         return items_file.read()
 
@@ -50,12 +51,12 @@ def amazon():
                                      "-o", f"{name_id}.json"],
                                     cwd="amazon-scraper-master/")
         except Exception:
-            return "", 500
+            return status.HTTP_500_INTERNAL_SERVER_ERROR
     else:
-        return "Category is not specified", 201
+        return "Category is not specified", status.HTTP_204_NO_CONTENT
     with open(f"amazon-scraper-master/{name_id}.json") as items_file:
         return items_file.read()
 
 
 if __name__ == '__main__':
-    app.run("0.0.0.0", port=6379)
+    app.run(port=6379)
