@@ -59,4 +59,4 @@ def amazon():
 
 
 if __name__ == '__main__':
-    app.run(port=6378)
+    app.run("0.0.0.0", port=6379)
