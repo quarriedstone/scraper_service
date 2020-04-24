@@ -15,6 +15,7 @@ class AmazonScraper(scrapy.Spider):
     def start_requests(self): 
         # starting urls for scraping
         urls = ["https://www.amazon.com/s?k={}&ref=nb_sb_noss_2".format(self.category)]
+        print(urls)
         for url in urls: yield scrapy.Request(url = url, callback = self.parse, headers = self.headers)
 
     def parse(self, response):
@@ -23,9 +24,6 @@ class AmazonScraper(scrapy.Spider):
 
         
     def parse_all(self, response):
-        if response.xpath("//div[@id='nav-logo']/a").get() is None:
-            yield scrapy.Request(url=response.url, callback = self.parse_all, headers = self.headers, dont_filter=True)
-
         self.no_pages -= 1
 
         products = response.xpath("//a[@class='a-link-normal a-text-normal']").xpath("@href").getall()
@@ -38,10 +36,7 @@ class AmazonScraper(scrapy.Spider):
             final_url = response.urljoin(next_page_url)
             yield scrapy.Request(url = final_url, callback = self.parse_all, headers = self.headers)
 
-    def parse_product(self, response):
-        if response.xpath("//div[@id='nav-logo']/a").get() is None:
-            yield scrapy.Request(url=response.url, callback = self.parse_product, headers = self.headers, dont_filter=True)
-
+    def parse_product(self, response): 
         url = response.request.url
 
         title = response.xpath("//span[@id='productTitle']//text()").get() or response.xpath("//h1[@id='title']//text()").get()
