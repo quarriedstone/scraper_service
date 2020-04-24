@@ -31,7 +31,7 @@ def airbnb():
             return status.HTTP_500_INTERNAL_SERVER_ERROR
     else:
         return "City is not specified", status.HTTP_204_NO_CONTENT
-    with open(f"airbnb-scraper/{name_id}.json") as items_file:
+    with open(f"airbnb-scraper/{name_id}.json", encoding="utf8") as items_file:
         return items_file.read()
 
 
@@ -54,9 +54,9 @@ def amazon():
             return status.HTTP_500_INTERNAL_SERVER_ERROR
     else:
         return "Category is not specified", status.HTTP_204_NO_CONTENT
-    with open(f"amazon-scraper-master/{name_id}.json") as items_file:
+    with open(f"amazon-scraper-master/{name_id}.json", encoding="utf8") as items_file:
         return items_file.read()
 
 
 if __name__ == '__main__':
-    app.run("0.0.0.0", port=6379)
+    app.run(port=6378)
