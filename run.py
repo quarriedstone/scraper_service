@@ -23,8 +23,11 @@ def airbnb():
     if city:
         global name_id
         name_id = name_id + 1
-        subprocess.check_output(['scrapy', 'crawl', "bnb", "-a", f"query=\"{city}\"", "-o", f"{name_id}.json"],
-                                cwd="airbnb-scraper/")
+        try:
+            subprocess.check_output(['scrapy', 'crawl', "bnb", "-a", f"query=\"{city}\"", "-o", f"{name_id}.json"],
+                                    cwd="airbnb-scraper/")
+        except Exception:
+            return "", 500
     else:
         return "City is not specified", 201
     with open(f"airbnb-scraper/{name_id}.json") as items_file:
@@ -42,9 +45,12 @@ def amazon():
     if category:
         global name_id
         name_id = name_id + 1
-        subprocess.check_output(['scrapy', 'crawl', "amazon_scraper", "-a", f"category=\"{category}\"",
-                                 "-o", f"{name_id}.json"],
-                                cwd="amazon-scraper-master/")
+        try:
+            subprocess.check_output(['scrapy', 'crawl', "amazon_scraper", "-a", f"category=\"{category}\"",
+                                     "-o", f"{name_id}.json"],
+                                    cwd="amazon-scraper-master/")
+        except Exception:
+            return "", 500
     else:
         return "Category is not specified", 201
     with open(f"amazon-scraper-master/{name_id}.json") as items_file:
