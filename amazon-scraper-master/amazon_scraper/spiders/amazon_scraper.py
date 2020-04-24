@@ -2,6 +2,7 @@ import scrapy
 from ..items import AmazonProduct
 import logging
 import ast
+import random
 
 class AmazonScraper(scrapy.Spider):
     logging.getLogger('scrapy').propagate = False
@@ -9,12 +10,11 @@ class AmazonScraper(scrapy.Spider):
 
     # Headers to fix 503 service unavailable error
     # Spoof headers to force servers to think that request coming from browser ;)
-    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.2840.71 Safari/539.36'}
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.2840.71 Safari/539.36'} 
 
     def start_requests(self): 
         # starting urls for scraping
         urls = ["https://www.amazon.com/s?k={}&ref=nb_sb_noss_2".format(self.category)]
-
         for url in urls: yield scrapy.Request(url = url, callback = self.parse, headers = self.headers)
 
     def parse(self, response):
@@ -23,6 +23,9 @@ class AmazonScraper(scrapy.Spider):
 
         
     def parse_all(self, response):
+        if response.xpath("//div[@id='nav-logo']/a").get() is None:
+            yield scrapy.Request(url=response.url, callback = self.parse_all, headers = self.headers, dont_filter=True)
+
         self.no_pages -= 1
 
         products = response.xpath("//a[@class='a-link-normal a-text-normal']").xpath("@href").getall()
@@ -36,6 +39,8 @@ class AmazonScraper(scrapy.Spider):
             yield scrapy.Request(url = final_url, callback = self.parse_all, headers = self.headers)
 
     def parse_product(self, response):
+        if response.xpath("//div[@id='nav-logo']/a").get() is None:
+            yield scrapy.Request(url=response.url, callback = self.parse_product, headers = self.headers, dont_filter=True)
 
         url = response.request.url
 
@@ -61,7 +66,7 @@ class AmazonScraper(scrapy.Spider):
         
         if img_url is None:
             img_url = response.xpath("//img[@id='landingImage']/@data-a-dynamic-image").get()
-            if img_url is None:
+            if img_url is None: 
                 return
             else:
                 img_url = list(ast.literal_eval(img_url).keys())
